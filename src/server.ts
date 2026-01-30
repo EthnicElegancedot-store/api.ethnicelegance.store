@@ -1,0 +1,55 @@
+import "./libs/dotenv.js";
+import express, { NextFunction, Response, Request } from "express";
+import response from "./utils/response.js";
+import connectDB from "./libs/mongoose.js";
+import { connectRedis } from "./libs/redis.js";
+import { log } from "./utils/logger.js";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+import authRouter from "./api/v1/auth/api.js";
+import adminProductRouter from "./api/v1/admin-product/api.js";
+import signatureRouter from "./signature.route.js";
+import checkCookies from "./utils/m-check-cookies.js";
+import adminCouponRouter from "./api/v1/admin-coupon/api.js";
+import couponCodeRouter from "./api/v1/coupon/api.js";
+import accountRouter from "./api/v1/account/api.js";
+import ProductRouter from "./api/v1/product/api.js";
+
+const app = express();
+const PORT = process.env.PORT || 5001;
+
+app.use(
+  cors({
+    origin: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    credentials: true,
+  }),
+);
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(express.urlencoded({ extended: true, limit: "16kb" }));
+
+app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/account", accountRouter);
+app.use("/api/v1/product", ProductRouter);
+app.use("/api/v1/admin", adminProductRouter);
+app.use("/api/v1/admin", adminCouponRouter);
+app.use("/api/v1/coupon", couponCodeRouter);
+app.use("/api/v1/cloudinary", checkCookies, signatureRouter);
+
+app.get("/", (req, res) => {
+  return response.success(res, "Hello World", 200);
+});
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  return response.failure(res, err.message, 500);
+});
+
+connectDB().then(() => {
+  connectRedis().then(() => {
+    app.listen(PORT, () => {
+      log(`Running - http://localhost:${PORT}`, "success");
+    });
+  });
+});
