@@ -16,6 +16,7 @@ const productSchema = new mongoose.Schema(
     category: { type: String, required: true, trim: true },
     subCategory: { type: String, required: true, trim: true },
     name: { type: String, required: true, trim: true },
+    sku: { type: String, required: true, trim: true, unique: true },
     description: { type: String, required: true, trim: true },
     productInformation: { type: String, required: true, trim: true },
     isActive: { type: Boolean, default: true },
@@ -35,6 +36,15 @@ const productSchema = new mongoose.Schema(
         "Block Print",
       ],
       index: true,
+    },
+    label: { type: String, trim: true },
+    averageRating: {
+      type: Number,
+      default: 0,
+    },
+    ratingCount: {
+      type: Number,
+      default: 0,
     },
     mrp: { type: Number, required: true },
     variants: [variants],

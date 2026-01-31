@@ -1,4 +1,4 @@
-import { Model, Document } from "mongoose";
+import { Model, Document, Types } from "mongoose";
 
 export interface IUser extends Document {
   name: string;
@@ -41,4 +41,15 @@ export interface UserModel extends Model<UserDocument> {
    * @return Promise that resolves to the updated user document.
    */
   updatePassword(email: string, newPassword: string): Promise<any>;
+}
+
+export interface ReviewDocument extends Document {
+  rating: number;
+  userId: Types.ObjectId;
+  productId: Types.ObjectId;
+  comment?: string;
+}
+
+export interface ReviewModel extends Model<ReviewDocument> {
+  calcAverageRatings(productId: Types.ObjectId): Promise<void>;
 }

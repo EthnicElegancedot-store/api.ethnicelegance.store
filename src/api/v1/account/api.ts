@@ -5,7 +5,6 @@ import User from "../../../schema/user.js";
 import response from "../../../utils/response.js";
 import Address from "../../../schema/address.js";
 import InputSensitization from "../../../utils/m-input-sensitization.js";
-import mongoose from "mongoose";
 
 const router = express.Router();
 

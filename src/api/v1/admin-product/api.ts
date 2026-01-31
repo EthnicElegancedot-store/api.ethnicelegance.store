@@ -5,7 +5,6 @@ import checkCookies from "../../../utils/m-check-cookies.js";
 import InputSensitization from "../../../utils/m-input-sensitization.js";
 import Product from "../../../schema/product.js";
 import mongoose from "mongoose";
-import { log } from "console";
 
 const router = express.Router();
 
