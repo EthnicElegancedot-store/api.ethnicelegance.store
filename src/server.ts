@@ -56,9 +56,7 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 });
 
 connectDB().then(() => {
-  connectRedis().then(() => {
-    app.listen(PORT, () => {
-      log(`Running - http://localhost:${PORT}`, "success");
-    });
+  app.listen(PORT, () => {
+    log(`Running - http://localhost:${PORT}`, "success");
   });
 });
