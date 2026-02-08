@@ -2,7 +2,6 @@ import "./libs/dotenv.js";
 import express, { NextFunction, Response, Request } from "express";
 import response from "./utils/response.js";
 import connectDB from "./libs/mongoose.js";
-import { connectRedis } from "./libs/redis.js";
 import { log } from "./utils/logger.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
