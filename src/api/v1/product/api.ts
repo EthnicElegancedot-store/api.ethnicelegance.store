@@ -18,11 +18,15 @@ router.get(
       priceMin,
       priceMax,
       rating,
+      searchQuery,
     } = req.query;
 
     const pageNumber = Number(page) || 1;
     const limitNumber = Number(limit) || 10;
     const skip = (pageNumber - 1) * limitNumber;
+
+    const searchTerm =
+      typeof searchQuery === "string" ? searchQuery.trim() : "";
 
     const query: Record<string, any> = {
       ...(category && { category }),
@@ -37,19 +41,32 @@ router.get(
             },
           }
         : {}),
+      ...(searchTerm
+        ? {
+            $or: [
+              { name: { $regex: searchTerm, $options: "i" } },
+              { sku: { $regex: searchTerm, $options: "i" } },
+              { category: { $regex: searchTerm, $options: "i" } },
+              { subCategory: { $regex: searchTerm, $options: "i" } },
+              { design: { $regex: searchTerm, $options: "i" } },
+            ],
+          }
+        : {}),
     };
+
+    const total = await Product.countDocuments(query);
 
     const products = await Product.find(query)
       .skip(skip)
       .limit(limitNumber)
       .lean();
 
-    return response.success(
-      res,
-      "Products are successfully retrieved",
-      200,
+    return response.success(res, "Products are successfully retrieved", 200, {
       products,
-    );
+      total,
+      page: pageNumber,
+      limit: limitNumber,
+    });
   }),
 );
 
@@ -66,7 +83,6 @@ router.get(
       __v: 0,
       updatedAt: 0,
       createdAt: 0,
-      
     }).lean();
 
     const getReview = await Review.find({ productId: productId }).lean();

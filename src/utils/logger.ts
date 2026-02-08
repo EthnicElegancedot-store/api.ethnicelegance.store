@@ -3,7 +3,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 
 const Logger = console.log;
-const IS_PROD = false;
+const IS_PROD = true;
 
 function getCallerInfo(): string {
   if (IS_PROD) return "";
